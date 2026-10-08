@@ -4,15 +4,16 @@
 
 - Product: Broken Bodies Player App.
 - Planned public host: `player.aauth.tech`; not deployed or configured yet.
-- Initial local repository: `~/code/bb-player`.
+- Public development repository: `https://github.com/gkedev/mackay`.
 - Canonical requirements: `docs/PRODUCT-SPEC.md`.
-- New GitHub repository, account authorization, and Cloud repository binding are pending.
+- Cloudroom Cloud GitHub authorization and Cloud repository binding are separate from repository publication.
+- Public demos must use synthetic data, not the real group roster or private ailment records.
 
 ## Connect the platforms in this order
 
 1. **Local Cloudroom project:** register this repository on the connected Mac. Keep the Cloudroom backend and its existing private Connect access separate from the public player domain.
-2. **GitHub:** sign into both the local/server GitHub integration and Cloud GitHub integration as applicable. Create/select a private repository, push `main`, and bind the project to the Cloud repository. A local project alone does not provision a Cloud checkout.
-3. **Codex/Pi:** choose a supported model explicitly on the actual execution target. Cloud Codex and Pi are available, but the current Cloud default reports GPT Astra. Hermes model settings do not govern Cloudroom. Validate authentication with a bounded test before assigning a build. Existing standalone terminal sessions are not automatically imported.
+2. **GitHub:** use the public `gkedev/mackay` development repository. Sign into both the local/server GitHub integration and Cloud GitHub integration as applicable, push `main`, and bind the project to the Cloud repository. A local project alone does not provision a Cloud checkout. Keep secrets and real player data out of the entire public Git history.
+3. **Codex/Pi:** choose a supported model explicitly on the actual execution target. Cloudroom and standalone agent model settings are independent. Validate authentication with a bounded test before assigning a build. Existing standalone terminal sessions are not automatically imported.
 4. **Development environments:** use a separate local Git worktree per implementation branch, or a Cloudroom Cloud sandbox once the repository is bound. Managed local worktrees and Cloud sandboxes have different options and permission semantics. Add dependency setup hooks only after an application and lockfile exist.
 5. **Supabase:** provision/select a staging project, track SQL migrations in Git, implement owner/group-aware RLS, and test with separate player and organizer identities. No production service-role credentials in routine coding environments.
 6. **WorkOS:** configure a staging AuthKit client and approved localhost/staging callback URLs. Use the documented Supabase third-party-auth integration and an `authenticated` database role claim; do not assume WorkOS user IDs are Supabase Auth UUIDs. Login does not itself confer group membership.

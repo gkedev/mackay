@@ -1,6 +1,6 @@
 # Broken Bodies Player App — Product Specification
 
-Status: agreed product direction, captured in the BB Player repository at `~/code/bb-player` for Cloudroom development. Application implementation, external account configuration, and deployment are pending. This document is not evidence of implemented application features.
+Status: agreed product direction, captured in the public `gkedev/mackay` repository for Cloudroom development. Application implementation, external app account configuration, and deployment are pending. This document is not evidence of implemented application features.
 
 ## Purpose and tone
 
@@ -95,7 +95,7 @@ Automation can follow after the manual-link flow works. Verify the official What
 ## Initial technology direction
 
 - Cloudroom: development workspace for managed Codex/Pi work.
-- GitHub: source repository and reviewed delivery workflow.
+- GitHub: public `gkedev/mackay` development/demo repository and reviewed delivery workflow; synthetic demo data only, no real player records or credentials.
 - Next.js/TypeScript: mobile-first web app, with PWA delivery considered before native apps.
 - WorkOS AuthKit: player identity; initially invite-only membership and low-friction email-code login.
 - Supabase: application records with membership- and owner-aware Row Level Security.
@@ -121,7 +121,7 @@ Minimum acceptance cases:
 
 ## Open decisions
 
-- GitHub repository creation/selection and Cloud repository binding.
+- Cloudroom Cloud GitHub authorization and repository binding.
 - Exact Monday time slots, court availability, and response deadline.
 - Selection/waitlist fairness rules and whether rotations are common.
 - Which product "Instinct" refers to and whether it adds useful workflow capability.
