@@ -12,7 +12,7 @@ A friendly clubhouse for routine Monday-night tennis: availability, groups of fo
 
 This repository contains the agreed product specification and development plan. It does **not** yet contain a running application, configured login, database, deployment, or DNS changes.
 
-Cloudroom is the development workspace, with Codex and Pi as implementation and review tools. Cloud repository binding is a separate setup step from publishing this repository.
+The repository is registered as a Cloudroom development project, with Codex and Pi as implementation and review tools. Each Cloud coding run must verify its own repository checkout and provider authentication before work begins.
 
 ## Start here
 

@@ -121,7 +121,7 @@ Minimum acceptance cases:
 
 ## Open decisions
 
-- Cloudroom Cloud GitHub authorization and repository binding.
+- Initial coding model selection and first Cloud sandbox checkout verification.
 - Exact Monday time slots, court availability, and response deadline.
 - Selection/waitlist fairness rules and whether rotations are common.
 - Which product "Instinct" refers to and whether it adds useful workflow capability.
