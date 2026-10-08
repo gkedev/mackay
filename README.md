@@ -1,5 +1,7 @@
 # Mackay — BB Player
 
+A player app for community and scheduling.
+
 Public development repository: **https://github.com/gkedev/mackay**.
 
 The Broken Bodies player app, planned for **https://player.aauth.tech**.
