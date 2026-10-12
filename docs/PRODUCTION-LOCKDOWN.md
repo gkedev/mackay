@@ -77,3 +77,7 @@ Source: private repo [gkedev/bb-player](https://github.com/gkedev/bb-player). Ne
 Rollback: `npx wrangler rollback <version-id> --name <worker>`.
 
 Verified after deploy: all routes 200, all 26 `/players/*.jpg` byte-identical to the source, production bundle targets `fuefvljlfncwikpkdnwd` only, signed-out `/gallery` redirects to `/login`.
+
+## HTTPS enforcement (2026-10-12)
+
+`http://player.aauth.tech` used to serve the app over plain HTTP (the zone's "Always Use HTTPS" is off). Chrome on iPhone opened a typed address over HTTP, so the page was not a secure context and passkeys were unavailable (`PublicKeyCredential` missing). Both Workers now run `worker/https.js` (in gkedev/bb-player) first: HTTP → 301 to HTTPS, plus `Strict-Transport-Security: max-age=31536000`. The zone-wide setting was left unchanged so other aauth.tech services are not affected.
