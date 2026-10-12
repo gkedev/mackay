@@ -64,3 +64,16 @@ Re-grant access only to `authenticated` members through these checks — never t
 - Site URL / redirect allow-list: `https://player.aauth.tech/**`.
 - Invitations are sent manually by the organizer (Instinct, WhatsApp, iMessage). Nothing is automated.
 - Adding a player later: add the profile and photo, add the phone to `player_phone_map`, and create an Auth account for that phone with the service role (server-side only).
+
+## App deployment (2026-10-12)
+
+Source: private repo [gkedev/bb-player](https://github.com/gkedev/bb-player). New flow: SMS → `/gallery` pick your photo → passkey → home.
+
+| Worker | Domain | New version | Rollback to |
+|---|---|---|---|
+| `bb-player-staging` | player-staging.aauth.tech | `b1c9643d-83ae-4ed8-b9d3-145e96a5ecda` | `b7dfa4dc-4824-4521-8dc4-de7df0d8d1ae` |
+| `bb-player` | player.aauth.tech | `b2d7e2dd-ede2-476d-8ba5-0064db8c60e1` | `15e103b3-c6d8-447b-8958-f4e47e78ffa6` (old anon-key app; it no longer works against the locked-down DB) |
+
+Rollback: `npx wrangler rollback <version-id> --name <worker>`.
+
+Verified after deploy: all routes 200, all 26 `/players/*.jpg` byte-identical to the source, production bundle targets `fuefvljlfncwikpkdnwd` only, signed-out `/gallery` redirects to `/login`.
