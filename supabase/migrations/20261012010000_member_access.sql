@@ -110,7 +110,8 @@ create policy claims_member_read on public.claims
 
 -- 5. Profile RPCs (names match the staging app).
 -- The caller's profile: owned one, else the one mapped to their verified phone.
-create or replace function public.current_player_profile()
+drop function if exists public.current_player_profile();
+create function public.current_player_profile()
 returns table(profile_key text, name text, photo text, claimed boolean)
 language sql stable security definer set search_path = '' as $$
   select p.profile_key, p.name, p.photo, p.auth_user_id is not null

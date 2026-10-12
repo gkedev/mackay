@@ -59,6 +59,10 @@ select pg_temp.expect('player cannot read auth link column', pg_temp.q('authenti
 select pg_temp.expect('player cannot update profiles', pg_temp.q('authenticated', :B, 'update public.profiles set name = name returning 1'), 'DENIED');
 select pg_temp.expect('cannot claim someone else''s photo', pg_temp.q('authenticated', :B, 'select public.claim_profile((select a from k))'), 'not_your_profile');
 select pg_temp.expect('unclaimed member cannot book court', pg_temp.q('authenticated', :B, 'select public.claim_spot(''6:30'')'), 'profile_not_linked');
+select pg_temp.expect('anon cannot list pool', pg_temp.q('anon', null, 'select count(*)::text from public.player_pool()'), 'DENIED');
+select pg_temp.expect('non-member pool empty', pg_temp.q('authenticated', :C, 'select count(*)::text from public.player_pool()'), '0');
+select pg_temp.expect('member pool lists everyone', pg_temp.q('authenticated', :B, 'select count(*)::text from public.player_pool()'), (select count(*)::text from public.profiles));
+select pg_temp.expect('pool marks only my photo', pg_temp.q('authenticated', :B, 'select string_agg(profile_key, '','') from public.player_pool() where mine'), (select b from k));
 select pg_temp.expect('claim own photo', pg_temp.q('authenticated', :B, 'select public.claim_profile((select b from k))'), 'ok');
 select pg_temp.expect('claim is idempotent', pg_temp.q('authenticated', :B, 'select public.claim_profile((select b from k))'), 'ok');
 select pg_temp.expect('claim bound to auth uid', (select auth_user_id::text from public.profiles where profile_key = (select b from k)), '00000000-0000-0000-0000-00000000000b');
@@ -66,6 +70,7 @@ select pg_temp.expect('claim bound to auth uid', (select auth_user_id::text from
 -- Recycled number: B's phone now verified on another account -> no takeover.
 update auth.users set phone = null where id = :B::uuid;
 insert into auth.users(id, phone, phone_confirmed_at) values ('00000000-0000-0000-0000-0000000000e0','15550000002',now());
+select pg_temp.expect('pool shows claimed', pg_temp.q('authenticated', :A, 'select claimed::text from public.player_pool() where profile_key = (select b from k)'), 'true');
 select pg_temp.expect('recycled number cannot take over claimed profile', pg_temp.q('authenticated', '00000000-0000-0000-0000-0000000000e0', 'select public.claim_profile((select b from k))'), 'claimed_by_someone_else');
 select pg_temp.expect('owner keeps access without phone (passkey account)', pg_temp.q('authenticated', :B, 'select profile_key from public.current_player_profile()'), (select b from k));
 
