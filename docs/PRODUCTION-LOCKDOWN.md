@@ -26,7 +26,26 @@ UPDATE `profiles`, read `weeks`/`claims`, insert `weeks`, and call `claim_spot` 
 The current production app reads data with the anonymous key, so its roster/courts
 show no data until the SMS + passkey app is deployed to production.
 
-## Go-forward access (next migration)
+## Member access (applied 2026-10-12)
+
+[`20261012010000_member_access.sql`](../supabase/migrations/20261012010000_member_access.sql), tested by
+`tests/db/member-access-check.sql` (33/33 on a restored production copy), then applied.
+
+- `profiles.auth_user_id` (unique, FK to `auth.users`) is the ownership link. Legacy `claimed_at` values were kept.
+- `player_phone_map` is private: no client role can read it. Load it server-side only.
+- Member = owns a profile, or has a **confirmed** phone in `auth.users` that is on the map. This works after passkey sign-in too.
+- Members can read `profiles(profile_key, name, photo)`, `weeks`, `claims`, and `participation()`. Nobody else can.
+- `claim_profile(profile_key)`: picks a photo from the pool. It only succeeds for the profile mapped to the caller's phone, is atomic, gives one profile per account, and never reassigns an owned profile (recycled numbers can't take over).
+- `current_player_profile()` / `claim_current_player_profile()` keep the staging app's API.
+- `claim_spot(time)` / `release_spot()` use the caller's owned profile and lock the week row (no overbooking).
+- Only organizers (`is_organizer` in the map) can create weeks.
+
+[`20261012020000_add_ben_t_and_marcos.sql`](../supabase/migrations/20261012020000_add_ben_t_and_marcos.sql) added `player-25` Ben T and `player-26`
+Marcos (26 profiles). Their photos are private assets, not in this public repo. They are in
+`~/Backups/BB-Player/new-profile-photos/` on the owner Mac and must ship with the production
+app build as `/players/bent.jpg` and `/players/marcos.jpg`.
+
+## Go-forward access
 1. Player opens the SMS link, verifies via Supabase Auth + Twilio Verify.
 2. Only an approved phone (private `player_phone_map`) unlocks the photo gallery.
 3. Player picks their photo from the existing pool; claim is atomic and bound to `auth.uid()`.

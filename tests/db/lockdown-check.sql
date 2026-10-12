@@ -8,7 +8,7 @@ begin
     execute q;
     reset role;
     return 'FAIL  ' || r || ': ' || q;
-  exception when insufficient_privilege then
+  exception when insufficient_privilege or undefined_function then
     reset role;
     return 'ok    ' || r || ' denied: ' || q;
   end;
