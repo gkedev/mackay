@@ -52,3 +52,15 @@ app build as `/players/bent.jpg` and `/players/marcos.jpg`.
 4. Player enrolls a Supabase experimental passkey for later sign-ins; SMS stays as fallback.
 
 Re-grant access only to `authenticated` members through these checks — never to `anon`.
+
+## Production player sign-in (configured 2026-10-12)
+
+- `player_phone_map`: 26 players, each mapped to an existing profile; Greg (`player-14`) is the only organizer. Loaded from the organizer's private CSV, never committed or copied to staging.
+- **Invite-only accounts (option A):** one Supabase Auth account was pre-created per mapped phone (`app_metadata.bb_invited = true`), and public signup is **off**. Unknown numbers are rejected (`signup_disabled`) before any SMS is sent.
+- Accounts are not linked to profiles ahead of time; each player links their own by picking their photo (`claim_profile`).
+- SMS: Supabase Auth → Twilio Verify, using a dedicated production Verify service **"BB Player"** (staging keeps "Broken Bodies Staging"). Same Twilio account. Twilio sends sign-in codes only.
+- Limits: 60 s between codes per number; 30 SMS/hour project-wide (enough for a group onboarding evening).
+- Passkeys (Supabase experimental): on. RP ID `player.aauth.tech`, origin `https://player.aauth.tech`, display name "BB Player".
+- Site URL / redirect allow-list: `https://player.aauth.tech/**`.
+- Invitations are sent manually by the organizer (Instinct, WhatsApp, iMessage). Nothing is automated.
+- Adding a player later: add the profile and photo, add the phone to `player_phone_map`, and create an Auth account for that phone with the service role (server-side only).
