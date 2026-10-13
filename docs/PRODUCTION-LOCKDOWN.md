@@ -81,3 +81,14 @@ Verified after deploy: all routes 200, all 26 `/players/*.jpg` byte-identical to
 ## HTTPS enforcement (2026-10-12)
 
 `http://player.aauth.tech` used to serve the app over plain HTTP (the zone's "Always Use HTTPS" is off). Chrome on iPhone opened a typed address over HTTP, so the page was not a secure context and passkeys were unavailable (`PublicKeyCredential` missing). Both Workers now run `worker/https.js` (in gkedev/bb-player) first: HTTP → 301 to HTTPS, plus `Strict-Transport-Security: max-age=31536000`. The zone-wide setting was left unchanged so other aauth.tech services are not affected.
+
+## FEED photo storage (2026-10-12)
+
+[`20261012040000_player_feed_storage.sql`](../supabase/migrations/20261012040000_player_feed_storage.sql), applied to production (staging already matched):
+- Private bucket `player-feed`: 4 MB per photo, `image/jpeg` only, not public.
+- Restrictive storage policy `player_feed_private_boundary`: `anon`/`authenticated` can never touch `player-feed` objects.
+- `public.player_photo_posts`: RLS on, no client grants, server-only (`service_role`).
+
+The FEED API (`/api/feed`, `/api/feed/upload`, `/api/feed/<id>`) now runs in both Workers (`worker/feed.js` behind `worker/https.js`, gkedev/bb-player). Per-Worker vars: `SUPABASE_URL`, `SUPABASE_ANON_KEY`, `APP_ORIGIN`; secret: `SUPABASE_SERVICE_ROLE_KEY` (Cloudflare encrypted secret, never in Git). Only signed-in players who have **claimed** their photo can view or post. Uploads are re-encoded to JPEG on the device and stripped of metadata on the server. Photos are shown through 10-minute signed links. Players can remove only their own posts. Profile photos are untouched.
+
+Verified: staging end-to-end (unclaimed refused → claim → upload → signed link 200 → remove → 0 objects). Production API refuses no token / bad token / anon key / foreign origin. Production storage check: anon can't read/list/upload, non-JPEG and >4 MB rejected, signed link works, bucket left empty.
