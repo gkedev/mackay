@@ -98,6 +98,6 @@ Verified: staging end-to-end (unclaimed refused → claim → upload → signed 
 `gkedev/bb-player` `staging` @ `b37b39a` deployed to Worker `bb-player` (version `68fff567-b059-4d23-bc23-87414dcdfea1`; roll back to `21c7d282`). `main` fast-forwarded to match.
 
 - Database: `20261014000000_match_log.sql` and `20261015000000_match_log_server_weather.sql` applied. Match Log is member-only, server-stamped, no deletes, weather written only by the Worker. Profiles/photos fingerprint unchanged; anon has zero grants in `public`.
-- Worker secrets: `SUPABASE_SERVICE_ROLE_KEY`, `GOOGLE_WEATHER_API_KEY`. **`CHIPIN_API_KEY` still needed**; until then the ChipIn tab answers "ChipIn is not configured yet."
+- Worker secrets: `SUPABASE_SERVICE_ROLE_KEY`, `GOOGLE_WEATHER_API_KEY`, `CHIPIN_API_KEY` (added after deploy).
 - Shipped: italic BB TENNIS brand, dark green cards, "Any injuries?", step numbers without circles, bottom nav (Home · Match Log · Gallery · ChipIn), Gallery header/headings, composer behind + Add photo, Match Log (Guest, circular photos, 26-player pool, court time in Pacific, Google weather for scores posted within 24 h), two-line badge names, ChipIn tab.
 - Verified: all routes 200, http→https, 26 photos byte-identical, bundle targets production only, APIs refuse unsigned/foreign-origin requests, anon cannot read profiles/match_log/phone map/weeks.
