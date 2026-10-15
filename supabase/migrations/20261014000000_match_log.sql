@@ -19,6 +19,7 @@ create table if not exists public.match_log (
   created_at timestamptz not null default now(),
   updated_at timestamptz not null default now()
 );
+alter table public.match_log alter column weather_label set default 'Weather not recorded';
 create index if not exists match_log_played_at_idx on public.match_log (played_at desc);
 
 -- Server-side stamping: clients cannot spoof who/when.
