@@ -2,7 +2,7 @@
 
 **Status: proposal for review, not an approved implementation or deployment.**
 
-**Confirmed user choices:** American Mahjong for the initial release; production hostname `mahj.aauth.tech`. Hostname selection is not evidence of DNS/TLS configuration or deployment. Per-game ruleset flexibility is recommended below; additional Mahjong variants remain future scope.
+**Confirmed user choices:** American Mahjong as the initial default; multiple tables and matches with card year, house rules, and scoring convention selected per game session; production hostname `mahj.aauth.tech`. Preserve historical rules/results and keep incompatible scoring systems separate in rankings. Additional Mahjong variants remain future scope. These product choices do not themselves authorize infrastructure changes or establish that DNS/TLS or deployment is configured.
 
 ## 1. Recommendation
 
