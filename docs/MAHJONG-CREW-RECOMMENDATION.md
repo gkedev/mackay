@@ -1,8 +1,8 @@
 # Mahjong Crew — BB Player reuse and Hostinger recommendation
 
-**Status: proposal for review, not an approved implementation or deployment.**
+**Status: a silver/grey synthetic-data prototype is approved and implemented locally. Auth, persistence, independent product builds, and Hostinger deployment remain proposals, not implemented integrations.** See the [prototype guide](PROTOTYPE.md).
 
-**Confirmed user choices:** American Mahjong as the initial default; multiple tables and matches with card year, house rules, and scoring convention selected per game session; production hostname `mahj.aauth.tech`. Preserve historical rules/results and keep incompatible scoring systems separate in rankings. Additional Mahjong variants remain future scope. These product choices do not themselves authorize infrastructure changes or establish that DNS/TLS or deployment is configured.
+**Confirmed user choices:** American Mahjong as the initial default; multiple tables and matches with card year, house rules, and scoring convention selected per game session; production hostname `mahj.aauth.tech`; a silver/grey, sleek, Luma-inspired prototype with simple navigation. Preserve historical rules/results and keep incompatible scoring systems separate in rankings. Additional Mahjong variants remain future scope. These product choices do not themselves authorize infrastructure changes or establish that DNS/TLS or deployment is configured.
 
 ## 1. Recommendation
 
@@ -10,7 +10,7 @@ Build **Mahjong Crew as a separately branded and deployed companion app**, using
 
 Keep each product's membership, application data, credentials, and authentication configuration separate. **Share code, not player records or production secrets.** Do not turn BB Player into Mahjong, merge the two communities, or build a general-purpose sports platform first.
 
-The important qualification: **this checkout contains BB Player requirements and a development plan, not a functioning app.** There are no implemented screens, auth integration, database migrations, or application build to clone. This is reuse of a strong product blueprint and technology direction; implementation is still required. There is no defensible code-reuse percentage or delivery estimate yet.
+The important qualification at the original review: **the checkout contained BB Player requirements and a development plan, not a functioning BB app to clone.** A runnable Mahjong synthetic-data prototype has since been added, but BB functionality, auth integration, and database migrations are still unimplemented. This remains reuse of a strong BB product blueprint and technology direction, not a clone of a finished BB application. There is no defensible production code-reuse percentage or delivery estimate yet.
 
 Recommended priorities:
 

@@ -1,4 +1,4 @@
-# Mackay — BB Player
+# Mackay — BB Player & Mahjong Crew
 
 A player app for community and scheduling.
 
@@ -10,7 +10,18 @@ A friendly clubhouse for routine Monday-night tennis: availability, groups of fo
 
 ## Current state
 
-This repository contains the agreed product specification and development plan. It does **not** yet contain a running application, configured login, database, deployment, or DNS changes.
+This repository contains the agreed BB Player specification and development plan, plus a runnable **Mahjong Crew design prototype**. The prototype uses fictional players and in-memory interactions; refreshing clears changes. BB Player itself is not implemented. Neither product has configured login, a connected database, a Hostinger application deployment, or DNS changes from this work.
+
+### Try the Mahjong prototype
+
+With Node 22.18+ and npm:
+
+```bash
+npm ci
+npm run dev
+```
+
+Open the loopback address printed by Next.js. No API keys or environment variables are needed. See the [prototype guide](docs/PROTOTYPE.md) for working flows, mock boundaries, and verification commands.
 
 The repository is registered as a Cloudroom development project, with Codex and Pi as implementation and review tools. Each Cloud coding run must verify its own repository checkout and provider authentication before work begins.
 
@@ -18,7 +29,8 @@ The repository is registered as a Cloudroom development project, with Codex and 
 
 - [Product specification](docs/PRODUCT-SPEC.md): canonical product rules and acceptance cases.
 - [Development plan](docs/DEVELOPMENT.md): platform integration, implementation sequence, and first coding task.
-- [Mahjong Crew recommendation](docs/MAHJONG-CREW-RECOMMENDATION.md): review of the supplied flows, proposed BB foundation reuse, and an isolated Hostinger deployment. Proposal only; does not change the agreed BB requirements.
+- [Mahjong Crew recommendation](docs/MAHJONG-CREW-RECOMMENDATION.md): supplied-flow review, confirmed product choices, proposed shared foundation, and isolated Hostinger deployment. Does not change the agreed BB requirements.
+- [Mahjong prototype guide](docs/PROTOTYPE.md): silver/grey interface, local setup, supported demo interactions, and what is not connected.
 
 Read the product specification and development plan before implementing features. The specification in this repository is the canonical version.
 

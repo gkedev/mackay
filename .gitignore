@@ -6,6 +6,8 @@ dist/
 coverage/
 playwright-report/
 test-results/
+*.tsbuildinfo
+next-env.d.ts
 
 # Local credentials and environment files
 .env
