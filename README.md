@@ -18,8 +18,9 @@ The repository is registered as a Cloudroom development project, with Codex and 
 
 - [Product specification](docs/PRODUCT-SPEC.md): canonical product rules and acceptance cases.
 - [Development plan](docs/DEVELOPMENT.md): platform integration, implementation sequence, and first coding task.
+- [Mahjong Crew recommendation](docs/MAHJONG-CREW-RECOMMENDATION.md): review of the supplied flows, proposed BB foundation reuse, and an isolated Hostinger deployment. Proposal only; does not change the agreed BB requirements.
 
-Read both before implementing features. The specification in this repository is the canonical version.
+Read the product specification and development plan before implementing features. The specification in this repository is the canonical version.
 
 ## Proposed stack
 
