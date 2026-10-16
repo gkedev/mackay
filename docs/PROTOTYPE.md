@@ -7,6 +7,12 @@
 - American Mahjong is the initial default. Different tables and sessions can select their own card year and American house-rule profile.
 - Selected eventual production hostname: `mahj.aauth.tech`. This prototype does not configure or publish that hostname.
 
+## Review locations
+
+The synthetic prototype is deployed in its own Hostinger staging container. Private Tailscale entry points are available through the existing review node on HTTPS 7443 and the owner's main network on HTTP 8080. The latter uses the existing HTTP-over-encrypted-Tailscale pattern; the main tailnet's HTTPS feature was not enabled or changed. Actual private URLs are shared in the Cloudroom thread, not this public repository. See the [staging runbook](../deploy/staging/README.md) and [deployment verification](evals/2026-10-16-private-staging.md).
+
+A phone must run Tailscale on the network owning the entry point it uses. The earlier Cloudroom `localhost` preview runs through the Mac and is not a direct phone or shareable review URL. Different tailnets do not automatically share node DNS or access.
+
 ## Run locally
 
 Requires Node **22.18 or newer** (the tests use Node's built-in TypeScript stripping) and npm.
@@ -53,7 +59,7 @@ All fixtures are synthetic. The sample schedule uses October 2026 dates and `Ame
 
 American hand values are manually entered whole numbers. The NMJL year is metadata only; the prototype contains no commercial card content, hand validation, Chinese scoring, settlements, cross-ruleset leaderboards, or content licence claims. “House rules” and notes are descriptive, not an executable scoring calculator.
 
-BB Player's tennis/badge experience is **not** implemented or replaced. This first Mahjong UI uses the agreed common architectural direction but does not yet implement independent product builds, WorkOS, Supabase, Docker deployment, DNS, or TLS. Those remain separately gated work in the [recommendation](MAHJONG-CREW-RECOMMENDATION.md).
+BB Player's tennis/badge experience is **not** implemented or replaced. This first Mahjong UI uses the agreed common architectural direction, with a dedicated staging Docker image/container and private Tailscale access. Independent product builds, WorkOS, Supabase, public DNS, and production deployment remain separately gated work in the [recommendation](MAHJONG-CREW-RECOMMENDATION.md).
 
 ## Verification
 
@@ -68,8 +74,9 @@ npm audit --audit-level=low
 Initial verification completed on 2026-10-16:
 
 - ESLint and TypeScript pass.
-- All **15 unit tests** pass: fresh fixtures, response/seat separation, unavailable without a reason, slot validation, explicit/idempotent acceptance, full capacity, overlapping invitations, cancellation, incomplete tables, manual point validation, duplicate hand IDs, draws, per-table rules, preserved prior sessions, and time-zone-independent labels.
+- All **16 unit tests** pass, including ID generation without HTTPS-only `randomUUID`, plus: fresh fixtures, response/seat separation, unavailable without a reason, slot validation, explicit/idempotent acceptance, full capacity, overlapping invitations, cancellation, incomplete tables, manual point validation, duplicate hand IDs, draws, per-table rules, preserved prior sessions, and time-zone-independent labels.
 - Optimized production build passes with two build workers.
+- The included GitHub checks workflow runs lint, type generation/typecheck, unit tests, build, and audit; it has not been executed remotely as part of this task.
 - npm audit reports **zero vulnerabilities**, including development dependencies. ESLint 10 + TypeScript/React Hooks linting are used instead of the Next ESLint preset because its current transitive glob dependency has an unpatched advisory. No runtime UI library was added.
 - Real Chromium walkthrough covers seat acceptance/cancellation, invalid and valid poll responses, creating a two-table game, manual score entry and rule locking, a new session with different rules, preserved previous results, desktop/mobile navigation, native dialog focus/Escape, and responsive forms. These are recorded interactive checks, not a committed automated browser test suite.
 - Responsive overflow checks cover 320, 360, 390, 768, 1024, and 1440 px widths. Mobile QA caught and fixed a fixed-navigation/backdrop-filter interaction and navigation retaining the previous screen's scroll position.

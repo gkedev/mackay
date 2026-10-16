@@ -10,7 +10,7 @@ A friendly clubhouse for routine Monday-night tennis: availability, groups of fo
 
 ## Current state
 
-This repository contains the agreed BB Player specification and development plan, plus a runnable **Mahjong Crew design prototype**. The prototype uses fictional players and in-memory interactions; refreshing clears changes. BB Player itself is not implemented. Neither product has configured login, a connected database, a Hostinger application deployment, or DNS changes from this work.
+This repository contains the agreed BB Player specification and development plan, plus a runnable **Mahjong Crew design prototype**, now deployed to a separate **private Hostinger staging container** for Tailscale review. The prototype uses fictional players and in-memory interactions; refreshing clears changes. Private review URLs are shared in the Cloudroom thread, not this public repository. BB Player itself is not implemented. Neither product has configured login, a connected database, a production deployment, or public DNS changes from this work.
 
 ### Try the Mahjong prototype
 

@@ -29,6 +29,6 @@ digraph deployment {
   mahjong -> mjdata [label="authenticated + RLS"];
   bb -> bbdata [label="authenticated + RLS", style=dashed];
 
-  note [shape=plaintext, label="PROPOSAL ONLY — PRODUCT APPS ARE NOT DEPLOYED\nStaging uses separate credentials/data. No shared player records.\nExisting unrelated containers stay untouched.", fontsize=13, fontcolor="#52657D", fillcolor="#F5F8FC", color="#F5F8FC"];
+  note [shape=plaintext, label="PRODUCTION TARGET — NOT YET DEPLOYED\nPrivate synthetic staging runs separately through Tailscale.\nNo shared player records. Existing unrelated services stay untouched.", fontsize=13, fontcolor="#52657D", fillcolor="#F5F8FC", color="#F5F8FC"];
   mjdata -> note [style=invis]; bbdata -> note [style=invis];
 }

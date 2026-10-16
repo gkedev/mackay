@@ -1,6 +1,6 @@
 # Mahjong Crew — BB Player reuse and Hostinger recommendation
 
-**Status: a silver/grey synthetic-data prototype is approved and implemented locally. Auth, persistence, independent product builds, and Hostinger deployment remain proposals, not implemented integrations.** See the [prototype guide](PROTOTYPE.md).
+**Status: the approved silver/grey synthetic-data prototype is implemented and deployed in an isolated private Hostinger staging container with Tailscale access. Auth, persistence, independent product builds, public DNS, and production deployment remain unimplemented.** See the [prototype guide](PROTOTYPE.md) and [staging verification](evals/2026-10-16-private-staging.md).
 
 **Confirmed user choices:** American Mahjong as the initial default; multiple tables and matches with card year, house rules, and scoring convention selected per game session; production hostname `mahj.aauth.tech`; a silver/grey, sleek, Luma-inspired prototype with simple navigation. Preserve historical rules/results and keep incompatible scoring systems separate in rankings. Additional Mahjong variants remain future scope. These product choices do not themselves authorize infrastructure changes or establish that DNS/TLS or deployment is configured.
 
@@ -24,7 +24,7 @@ Recommended priorities:
 - **BB foundation:** [README](../README.md), [product specification](PRODUCT-SPEC.md), and [development plan](DEVELOPMENT.md). These remain the canonical BB requirements; this proposal does not change them.
 - **Hostinger, read-only snapshot on 2026-10-16 at approximately 22:08 UTC:** Docker is running, Traefik serves HTTPS on ports 80/443, and existing apps use its external `app-net` network with the `letsencrypt` resolver. The host reported about 7.8 GiB RAM, 2.1 GiB available, 45 GB free disk, and no swap. This is a point-in-time capacity check, not a load test or uptime guarantee.
 - No running BB Player application container was found in that inventory. A stopped, BB-named backup utility is not an application deployment and was not treated as reusable app code. Its contents were not inspected.
-- No containers, databases, DNS, auth clients, or existing production services were changed. No messages were sent.
+- During the original review, no containers, databases, DNS, auth clients, or existing production services were changed. Subsequently, the user approved private staging: a new isolated application container and narrowly scoped Tailscale Serve entry points were added. Existing routes/containers, databases, public DNS, and auth clients were left unchanged; no player messages were sent.
 
 ## 3. Fit between the supplied flows and BB Player
 
@@ -148,7 +148,7 @@ Use separately scoped AuthKit clients/environments where supported, product-spec
 
 ![Proposed independent deployments from a common codebase](assets/mahjong-deployment.png)
 
-*Proposed application topology. Only the existing reverse proxy was verified as running; the product boxes are not deployed applications. [Editable diagram source](assets/mahjong-deployment.dot).*
+*Proposed production topology, not the private staging topology. Production product boxes are not deployed; synthetic staging runs separately through Tailscale. [Editable diagram source](assets/mahjong-deployment.dot).*
 
 | Item | Recommendation |
 | --- | --- |
