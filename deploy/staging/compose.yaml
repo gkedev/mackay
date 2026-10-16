@@ -38,4 +38,4 @@ services:
     networks: [staging]
 networks:
   staging:
-    internal: true
+    driver: bridge

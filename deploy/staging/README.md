@@ -6,7 +6,7 @@ This deployment is a synthetic-data design preview, **not** the production club 
 
 - Dedicated Hostinger Compose project: `/docker/mahjong-crew-staging`.
 - App HTTP is published **only** on host loopback `127.0.0.1:3012`.
-- Runtime uses a dedicated internal Docker network, not the shared public proxy network. Traefik discovery is explicitly disabled.
+- Runtime uses a dedicated Docker bridge, not the shared public proxy network. Traefik discovery is explicitly disabled. The bridge allows outbound traffic; inbound application access is published only on host loopback. Docker's `internal: true` suppressed loopback port publishing on this host, so it is not used.
 - Add a separate **Tailscale Serve HTTPS port 7443** on the existing authorized review node, proxying to `http://127.0.0.1:3012`. Preserve its other routes. Do not use Tailscale Funnel, reset Serve configuration, or publish the app port on `0.0.0.0`.
 - The private URL uses that node's existing `*.ts.net` hostname and `:7443`. The actual review URL is shared privately, not committed to this public repository.
 - No public DNS, `mahj.aauth.tech`, production credentials, or existing application containers are changed.

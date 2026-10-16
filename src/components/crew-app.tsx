@@ -14,6 +14,7 @@ import {
   changeRules,
   crew,
   dateParts,
+  demoId,
   DEMO_PLAYER,
   fullTables,
   initialGames,
@@ -1308,7 +1309,7 @@ function SessionEditor({
     attempt(() => {
       update(
         recordHand(active, table, {
-          id: crypto.randomUUID(),
+          id: demoId(),
           winner: String(data.get("winner")),
           points: Number(data.get("points")),
         }),
@@ -1514,7 +1515,7 @@ function CreateGame({
     const startsAt = `${data.get("date")}T${data.get("time")}`;
     const year = Number(data.get("year"));
     const game: Game = {
-      id: crypto.randomUUID(),
+      id: demoId(),
       title,
       venue,
       startsAt,

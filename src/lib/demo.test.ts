@@ -5,6 +5,7 @@ import {
   cancelSeat,
   changeRules,
   dateParts,
+  demoId,
   DEMO_PLAYER,
   fullTables,
   initialGames,
@@ -13,6 +14,22 @@ import {
   respondToPoll,
   seats,
 } from "./demo.ts";
+
+test("demo IDs use random values without depending on HTTPS-only randomUUID", () => {
+  const original = globalThis.crypto;
+  try {
+    Object.defineProperty(globalThis, "crypto", {
+      configurable: true,
+      value: { getRandomValues: (values: Uint32Array) => values.fill(1) },
+    });
+    assert.equal(demoId(), "demo-00000001000000010000000100000001");
+  } finally {
+    Object.defineProperty(globalThis, "crypto", {
+      configurable: true,
+      value: original,
+    });
+  }
+});
 
 test("demo fixtures are fresh and have explicit synthetic four-seat tables", () => {
   const games = initialGames();

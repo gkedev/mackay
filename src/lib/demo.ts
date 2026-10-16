@@ -2,6 +2,12 @@
 // or concurrency controls. All sample wall-clock times use America/Los_Angeles.
 export const DEMO_PLAYER = "Alex M.";
 export const TIME_ZONE = "America/Los_Angeles";
+
+export function demoId() {
+  // getRandomValues also works on private HTTP origins; randomUUID requires
+  // HTTPS or localhost. These IDs identify tab-local demo records, not access.
+  return `demo-${Array.from(crypto.getRandomValues(new Uint32Array(4)), (value) => value.toString(16).padStart(8, "0")).join("")}`;
+}
 export type Response =
   "pending" | "available" | "maybe" | "unavailable" | "accepted";
 export type Rules = {
