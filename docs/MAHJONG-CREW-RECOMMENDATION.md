@@ -2,6 +2,8 @@
 
 **Status: proposal for review, not an approved implementation or deployment.**
 
+**Confirmed user choices:** American Mahjong for the initial release; production hostname `mahj.aauth.tech`. Hostname selection is not evidence of DNS/TLS configuration or deployment. Per-game ruleset flexibility is recommended below; additional Mahjong variants remain future scope.
+
 ## 1. Recommendation
 
 Build **Mahjong Crew as a separately branded and deployed companion app**, using BB Player's planned club-management foundation. Use one small Next.js/TypeScript codebase for common functions, with distinct BB and Mahjong modules and independently released app images. Run Mahjong in a **new Docker Compose project/container on the existing Hostinger VPS**, behind its existing Traefik HTTPS proxy.
@@ -13,7 +15,7 @@ The important qualification: **this checkout contains BB Player requirements and
 Recommended priorities:
 
 1. Make organizing a reliable four-player table effortless.
-2. Add simple, manually recorded scores for the pilot's chosen ruleset.
+2. Add simple, manually recorded American Mahjong scores, with card year and agreed house rules selected per game session.
 3. Add richer discovery, additional scoring rules, and analytics after actual use.
 
 ## 2. What was reviewed and verified
@@ -75,9 +77,18 @@ Resolve simultaneous seat claims transactionally. On cancellation, release the s
 
 ### C. Scoring: specify the rules before building a calculator
 
-The PDF's two branches are useful entry points, but “Chinese Mahjong” is not a sufficiently precise scoring specification. Select the actual variant and house rules with the pilot crew. Choose a ruleset when creating a game session and preserve its version in history; do not silently reinterpret old games when defaults change.
+**American Mahjong is confirmed for the initial release.** Capture manually entered hand reference, NMJL year, winner/draw, and the results or agreed per-player point changes. The group must define whether “points” means a hand value or a settlement total. Do not imply that a manual entry was rules-validated.
 
-For an American-first pilot, capture manually entered hand reference, NMJL year, winner/draw, and the results or agreed per-player point changes. The group must define whether “points” means a hand value or a settlement total. Do not imply that a manual entry was rules-validated.
+**Allow different rulesets for different games, not one permanent app-wide scoring choice.** Recommended structure:
+
+- A scheduled event holds the invitation, time, venue, and an American Mahjong default ruleset.
+- An event can have several tables; each table can have successive game sessions containing multiple hands/rounds.
+- Each session selects one supported, versioned ruleset profile: Mahjong variant, card year where applicable, house rules, and point convention. Start with agreed American profiles; do not offer unsupported variants as working scoring modes.
+- A table/session may override the event default before play. Show the actual rules to its players; a material change after seat acceptance requires renewed confirmation.
+- Once scoring starts, preserve that session's ruleset snapshot. To play under different rules, finish or close the session and start another. Changes to crew defaults or saved profiles must not rewrite previous results.
+- Example: an afternoon event can have one table playing the crew's standard American rules and another using an agreed American house-rule profile. A later session can use another supported profile without affecting earlier scores.
+
+This supports multiple matches and future Mahjong variants in the same app without building every scoring calculator now. Keep manual American score recording as the first implementation. “Chinese Mahjong” is not a sufficiently precise scoring specification; any future Chinese profile needs an exact variant and house rules.
 
 For a later Chinese-rules release, define the exact fan system, dealer/seat information, winning method, applicable limits/multipliers, and settlement rules before adding calculations. Do not ship a generic “fan × points” formula as if it applies to every Chinese variant.
 
@@ -142,7 +153,7 @@ Use separately scoped AuthKit clients/environments where supported, product-spec
 | Item | Recommendation |
 | --- | --- |
 | Compose project | New `/docker/mahjong-crew/` project, with its own app service and deployment credentials. Leave other projects and the BB backup alone. |
-| Hostnames | Propose `mahjong.aauth.tech` for production and `mahjong-staging.aauth.tech` for staging, subject to approval and DNS checks. These names are suggestions, not configured or verified domains. |
+| Hostnames | User-selected production hostname: `mahj.aauth.tech`. Suggest `mahj-staging.aauth.tech` for staging, still subject to approval. DNS availability/routing and TLS remain unverified and unconfigured by this work. |
 | Runtime | A production Next.js standalone Node image, built/tested in CI and pulled by immutable digest or commit tag. Match the VPS architecture. Do not run a dev server or agent runtime as the public app. |
 | Routing | Attach only the app service to the existing `app-net`; use uniquely named Traefik router/service labels, the approved Host rule, `websecure`, `letsencrypt`, and an internal app port such as 3000. Publish no extra host port. No need to restart the proxy. |
 | Data | Supabase managed Postgres outside the VPS. No new local database container for the initial release. Database migrations are a separately gated release action, not an app-startup side effect. |
@@ -160,10 +171,10 @@ Use separately scoped AuthKit clients/environments where supported, product-spec
 
 | Increment | Deliverable | Exit gate |
 | --- | --- | --- |
-| 0 — Confirm scope | Approve independent product deployment, domain, pilot crew, four-seat table rule, first scoring variant, and privacy defaults. | Explicit decisions; no infrastructure changes yet. |
+| 0 — Confirm scope | American Mahjong and `mahj.aauth.tech` are selected. Confirm independent deployment scope, staging hostname, pilot crew, four-seat table rule, American scoring profiles, and privacy defaults. | Explicit remaining decisions; no infrastructure changes yet. |
 | 1 — Synthetic prototype | Login placeholder clearly labelled; invitation/availability screens, organizer results, table confirmation, duty assignment, and a simple score-entry mock. | Review on an actual phone with organizer and players; no claim that mock data is securely persisted. |
 | 2 — Working scheduling slice | Staging AuthKit + Supabase/RLS, real invitations/RSVPs, organizer-approved final time, accepted seats, cancellation/substitutes, private venue, and copyable messages. | Unit, authorization, concurrency, and browser tests pass; unauthorized access fails. |
-| 3 — Pilot scoring | One agreed ruleset, manual hand/round entry, review/finalization, corrections, and per-variant history. | Crew checks recorded results against paper examples, including draw/correction cases. |
+| 3 — Pilot scoring | Manual American hand/round entry, supported card-year/house-rule profiles selected per session, review/finalization, corrections, and ruleset-scoped history. | Crew checks paper examples, draw/correction cases, separate concurrent tables, and a new session using different rules without altering prior results. |
 | 4 — Hostinger staging and pilot | Approved isolated container/HTTPS deployment with synthetic staging data first; restore/rollback check and a separately approved real-player pilot. | Lint, typecheck, tests, production build, mobile end-to-end checks, login callback, capacity check, and recovery drill pass. Production/DNS require explicit approval. |
 | Later | Additional Chinese rulesets, opt-in friend discovery/search/QR, richer statistics, notifications, offline drafts, and tournaments. | Prioritize from pilot evidence; do not bundle these into the first scheduling release. |
 
@@ -181,16 +192,16 @@ Offline support should start, if needed, with clearly marked unsynced score draf
 6. A confirmed player's cancellation releases the seat, flags the incomplete table, and offers an eligible substitute a new invitation.
 7. Organizer-entered responses, table changes, and score corrections are attributable. Ordinary players cannot alter someone else's availability or finalized scores.
 8. A QR/link preview bot cannot consume an invitation; expired/revoked links fail; friendship alone grants no crew/event access.
-9. American scores retain their recorded year/ruleset and Chinese scores their selected variant/version. Their raw points are not mixed in a leaderboard.
+9. Separate tables/sessions can select different supported American profiles. Changing a default or starting a new session with different rules does not alter previous scores. American results retain their recorded year/ruleset; future Chinese results retain their selected variant/version. Raw points from incompatible rulesets are not mixed in a leaderboard.
 10. Duplicate hand submission is prevented, a draw is supported, and a correction leaves an audit trail without silently rewriting a finalized result.
 11. Mahjong cannot expose BB badges, members, cookies, or credentials, even through a direct API call. Common-code changes pass both products' tests.
 12. A Mahjong container rollback leaves unrelated Hostinger apps untouched, while a tested database restore procedure exists separately.
 
-## 8. Decisions to approve before implementation
+## 8. Remaining decisions before implementation
 
-1. **Product/hosting:** approve one codebase, independent product images/containers, and isolated data/auth environments rather than replacing BB. Confirm whether the suggested hostnames are wanted.
+1. **Product/hosting:** approve one codebase, independent product images/containers, and isolated data/auth environments rather than replacing BB. Production will target the selected `mahj.aauth.tech`; confirm the proposed staging hostname and authorize deployment/DNS changes separately.
 2. **Pilot:** identify the initial crew, organizer, time zone, venue privacy policy, and whether four players per table is the initial standard. Recommendation: one private crew first, while retaining crew-scoped permissions.
-3. **Scoring:** is the first pilot American Mahjong? If so, which NMJL year/house rules and point convention? If Chinese play is required immediately, identify the exact ruleset before estimating it. Recommendation: one manual ruleset first; no automatic card validation.
+3. **Scoring:** American Mahjong is selected. Confirm the initial NMJL year, supported house-rule profiles, and point convention. Recommendation: save these per session, allow multiple matches/tables, and keep initial scoring manual; additional variants and automatic card validation are not included by this choice.
 4. **Scope/cost:** approve scheduling + duties + basic manual scoring as the pilot, with native apps, payments, tournaments, global discovery, and automated messaging deferred. Approve provider plans only after checking their actual environment and backup limits.
 
 **Bottom line:** BB Player is a good foundation because both products are private clubs coordinating reliable groups of four. The best reuse is the identity, membership, availability, confirmation, and substitute machinery. Mahjong scoring and connection consent deserve their own design. Start with an isolated Mahjong pilot on the existing Hostinger infrastructure, without importing BB's tennis/health model or pretending the existing repository is already a built app.

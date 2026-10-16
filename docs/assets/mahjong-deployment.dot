@@ -12,7 +12,7 @@ digraph deployment {
   subgraph cluster_vps {
     label="EXISTING HOSTINGER VPS"; fontname="Liberation Sans"; fontsize=18; fontcolor="#37516D"; color="#AFBDD0"; style="rounded"; margin=24;
     proxy [label="Traefik HTTPS proxy — verified running\nExisting app-net network • no new public app port", fillcolor="#F0F4FA"];
-    mahjong [label="NEW: MAHJONG CREW CONTAINER\nProposed: mahjong.aauth.tech\nTables • duties • manual scoring", fillcolor="#E2F3EC", color="#39896D", penwidth=2];
+    mahjong [label="NEW: MAHJONG CREW CONTAINER\nSelected host: mahj.aauth.tech\nTables • duties • manual scoring", fillcolor="#E2F3EC", color="#39896D", penwidth=2];
     bb [label="FUTURE: BB PLAYER CONTAINER\nPlanned: player.aauth.tech\nTennis • court groups • badges", fillcolor="#F0F3F8", color="#94A3B8", style="rounded,filled,dashed"];
     {rank=same; mahjong; bb;}
     proxy -> mahjong [label="proposed route"];
