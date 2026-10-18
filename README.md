@@ -18,6 +18,7 @@ The repository is registered as a Cloudroom development project, with Codex and 
 
 - [Product specification](docs/PRODUCT-SPEC.md): canonical product rules and acceptance cases.
 - [Development plan](docs/DEVELOPMENT.md): platform integration, implementation sequence, and first coding task.
+- [AAuth future demos](docs/AAUTH-FUTURE-DEMOS.md): later demo ideas, not in the current scope.
 
 Read both before implementing features. The specification in this repository is the canonical version.
 
