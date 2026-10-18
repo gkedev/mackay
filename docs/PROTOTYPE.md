@@ -1,8 +1,9 @@
-# Mahjong Crew — silver/grey prototype
+# Rackettes Mahjong — prototype
 
 ## Approved design direction
 
-- Silver/grey, sleek, welcoming, and event-led, with a Luma-inspired sense of space and simple navigation. This is an original interface, not a copy of Luma's branding or assets.
+- **Rackettes skin:** blackletter Rackettes logo (`src/assets/rackettes-logo.png`, cut out from the supplied JPG), hot pink `#FF13BC`, black `#0A0A0A`, and cool neutral greys. Pink marks active, selected, and confirmed states; deep pink `#C2008A` is used for pink text on light backgrounds for contrast.
+- Sleek, welcoming, and event-led, with a Luma-inspired sense of space and simple navigation. This is an original interface, not a copy of Luma's branding or assets.
 - Three destinations: **Discover**, **My games**, and **Crew**. On phones, navigation sits at the bottom of the viewport.
 - American Mahjong is the initial default. Different tables and sessions can select their own card year and American house-rule profile.
 - Selected eventual production hostname: `mahj.aauth.tech`. This prototype does not configure or publish that hostname.

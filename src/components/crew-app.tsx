@@ -8,6 +8,7 @@ import {
   type FormEvent,
   type ReactNode,
 } from "react";
+import logoImage from "@/assets/rackettes-logo.png";
 import {
   acceptInvite,
   cancelSeat,
@@ -114,29 +115,8 @@ function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
 function Logo() {
   return (
     <span className="brand">
-      <span className="brand-mark">
-        <svg viewBox="0 0 28 30" fill="none" aria-hidden="true">
-          <rect
-            x="2"
-            y="3"
-            width="19"
-            height="24"
-            rx="5"
-            stroke="currentColor"
-            strokeWidth="1.5"
-          />
-          <path
-            d="M8 1h12a6 6 0 0 1 6 6v15M11.5 8v14M7 12h9v6H7z"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinejoin="round"
-          />
-        </svg>
-      </span>
-      <span>
-        mahj<span className="brand-light">crew</span>
-        <span className="brand-period">.</span>
-      </span>
+      <img className="brand-logo" src={logoImage.src} alt="Rackettes" />
+      <span className="brand-tag">MAHJONG</span>
     </span>
   );
 }
@@ -161,14 +141,14 @@ function TileArtwork({
         width="100"
         height="138"
         rx="13"
-        fill={dark ? "#626469" : "#b6b6b2"}
+        fill={dark ? "#2a2a2a" : "#b4b4b4"}
       />
       <rect
         width="100"
         height="138"
         rx="13"
         fill={tone}
-        stroke={dark ? "#dededb" : "#fff"}
+        stroke={dark ? "#ff13bc" : "#fff"}
         strokeWidth="1.5"
       />
       <rect
@@ -183,7 +163,7 @@ function TileArtwork({
       />
       {symbol === "wind" ? (
         <g
-          stroke="#44464a"
+          stroke="#ff13bc"
           strokeWidth="5.5"
           fill="none"
           strokeLinejoin="round"
@@ -191,7 +171,7 @@ function TileArtwork({
           <path d="M50 30v80M28 48h44v36H28z" />
         </g>
       ) : symbol === "dots" ? (
-        <g fill="none" stroke="#55575a" strokeWidth="3.5">
+        <g fill="none" stroke="#1a1a1a" strokeWidth="3.5">
           {[
             [31, 38],
             [69, 38],
@@ -201,12 +181,12 @@ function TileArtwork({
           ].map(([x, y]) => (
             <g key={`${x}-${y}`}>
               <circle cx={x} cy={y} r="9" />
-              <circle cx={x} cy={y} r="2" fill="#55575a" />
+              <circle cx={x} cy={y} r="2" fill="#1a1a1a" />
             </g>
           ))}
         </g>
       ) : (
-        <g stroke="#656668" strokeWidth="5" strokeLinecap="round">
+        <g stroke="#1a1a1a" strokeWidth="5" strokeLinecap="round">
           {[33, 65].map((x) => (
             <g key={x}>
               <path d={`M${x} 32v74`} />
@@ -232,13 +212,13 @@ function TileArtwork({
         <radialGradient id={`${id}-bg`} cx="55%" cy="35%" r="80%">
           <stop
             stopColor={
-              dark ? "#62646b" : variant === "silver" ? "#e2e3e5" : "#f0efeb"
+              dark ? "#2b2b2b" : variant === "silver" ? "#e4e4e4" : "#f2f2f2"
             }
           />
           <stop
             offset="1"
             stopColor={
-              dark ? "#2c2e33" : variant === "silver" ? "#b7babf" : "#d5d4d0"
+              dark ? "#050505" : variant === "silver" ? "#bababa" : "#d6d6d6"
             }
           />
         </radialGradient>
@@ -258,7 +238,7 @@ function TileArtwork({
         cy="264"
         rx="150"
         ry="25"
-        fill="#24262c"
+        fill="#0a0a0a"
         opacity={hero ? ".15" : ".22"}
         filter={`url(#${id}-shadow)`}
       />
@@ -266,36 +246,36 @@ function TileArtwork({
         {tile(
           "translate(114 100) rotate(-23 50 69)",
           "bamboo",
-          dark ? "#c5c6c8" : "#e1e1dc",
+          dark ? "#d4d4d4" : "#e2e2e2",
         )}
-        {tile("translate(283 87) rotate(20 50 69)", "dots", "#f1f0eb")}
-        {tile("translate(206 58) rotate(-5 50 69)", "wind", "#faf9f4")}
+        {tile("translate(283 87) rotate(20 50 69)", "dots", "#f2f2f2")}
+        {tile("translate(206 58) rotate(-5 50 69)", "wind", "#fafafa")}
       </g>
       {!hero && (
         <>
           <text
             x="28"
             y="35"
-            fill={dark ? "#e6e6e6" : "#535458"}
+            fill={dark ? "#ff13bc" : "#141414"}
             fontSize="11"
             fontFamily="Arial, sans-serif"
             letterSpacing="3"
           >
-            MAHJ CREW
+            RACKETTES
           </text>
           <path
             d="M456 27v16m-8-8h16"
-            stroke={dark ? "#e6e6e6" : "#535458"}
+            stroke={dark ? "#ff13bc" : "#141414"}
             strokeWidth="1"
           />
         </>
       )}
       {hero && (
         <>
-          <circle cx="112" cy="60" r="3" fill="#a9aaab" />
+          <circle cx="112" cy="60" r="4" fill="#ff13bc" />
           <path
             d="M402 221v16m-8-8h16M100 223v10m-5-5h10"
-            stroke="#949699"
+            stroke="#141414"
             strokeWidth="1.3"
           />
         </>
@@ -481,7 +461,7 @@ export function CrewApp() {
           <button
             type="button"
             className="brand-button"
-            aria-label="Mahj Crew home"
+            aria-label="Rackettes Mahjong home"
             onClick={() => navigate("Discover")}
           >
             <Logo />

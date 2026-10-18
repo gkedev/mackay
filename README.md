@@ -30,7 +30,7 @@ The repository is registered as a Cloudroom development project, with Codex and 
 - [Product specification](docs/PRODUCT-SPEC.md): canonical product rules and acceptance cases.
 - [Development plan](docs/DEVELOPMENT.md): platform integration, implementation sequence, and first coding task.
 - [Mahjong Crew recommendation](docs/MAHJONG-CREW-RECOMMENDATION.md): supplied-flow review, confirmed product choices, proposed shared foundation, and isolated Hostinger deployment. Does not change the agreed BB requirements.
-- [Mahjong prototype guide](docs/PROTOTYPE.md): silver/grey interface, local setup, supported demo interactions, and what is not connected.
+- [Mahjong prototype guide](docs/PROTOTYPE.md): Rackettes pink/black interface, local setup, supported demo interactions, and what is not connected.
 
 Read the product specification and development plan before implementing features. The specification in this repository is the canonical version.
 
