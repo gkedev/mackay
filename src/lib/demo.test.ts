@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   acceptInvite,
+  addScore,
   cancelSeat,
   changeRules,
   dateParts,
@@ -9,10 +10,14 @@ import {
   DEMO_PLAYER,
   fullTables,
   initialGames,
+  joinCode,
   newSession,
+  openSpots,
   recordHand,
   respondToPoll,
+  scoreStats,
   seats,
+  tablesFor,
 } from "./demo.ts";
 
 test("demo IDs use random values without depending on HTTPS-only randomUUID", () => {
@@ -192,4 +197,63 @@ test("displayed sample wall-clock time is independent of the viewer's time zone"
     long: "Monday, October 19",
     time: "1:00 PM",
   });
+});
+
+test("max attendees caps seats; blank means unlimited and opens new tables", () => {
+  const games = initialGames();
+  assert.equal(openSpots(games[0]), 2);
+  assert.equal(openSpots(games[2]), null);
+  assert.equal(tablesFor(null), 1);
+  assert.equal(tablesFor(9), 3);
+  const full = { ...games[0], id: "full", maxAttendees: 2 };
+  assert.throws(() => acceptInvite([full], "full"), /Every seat is filled/);
+  const packed = {
+    ...games[0],
+    id: "packed",
+    maxAttendees: null,
+    tables: [{ ...games[0].tables[0], players: ["A", "B", "C", "D"] }],
+  };
+  const [result] = acceptInvite([packed], "packed");
+  assert.equal(result.tables.length, 2);
+  assert.deepEqual(result.tables[1].players, [DEMO_PLAYER]);
+});
+test("join codes are six unambiguous characters", () => {
+  assert.match(joinCode(), /^[A-HJ-NP-Z2-9]{6}$/);
+});
+test("scores: stats per mahjong type, validation, de-duplication", () => {
+  const a = {
+    id: "a",
+    title: "Fri",
+    date: "2026-10-20",
+    type: "American" as const,
+    won: true,
+    points: 50,
+  };
+  const b = {
+    id: "b",
+    title: "Sat",
+    date: "2026-10-21",
+    type: "Chinese" as const,
+    won: false,
+    points: 25,
+  };
+  assert.deepEqual(scoreStats([], "All"), {
+    list: [],
+    games: 0,
+    wins: 0,
+    avg: 0,
+  });
+  const entries = addScore(addScore([], a), b);
+  assert.equal(entries[0].id, "b");
+  assert.equal(addScore(entries, a), entries);
+  assert.deepEqual(
+    { ...scoreStats(entries, "All"), list: 0 },
+    { list: 0, games: 2, wins: 1, avg: 38 },
+  );
+  assert.equal(scoreStats(entries, "Chinese").wins, 0);
+  assert.throws(
+    () => addScore([], { ...a, id: "c", points: -1 }),
+    /whole points/,
+  );
+  assert.throws(() => addScore([], { ...a, id: "c", title: " " }), /game name/);
 });

@@ -2035,3 +2035,310 @@ legend {
     transform: none;
   }
 }
+
+/* Create game (Axel's field set, silver theme) */
+.create-form legend {
+  padding: 0;
+  margin-bottom: 8px;
+}
+.date-time input {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #dfe1e4;
+  border-radius: 8px;
+  background: #fff;
+  color: #44484e;
+  font-size: 12px;
+  text-align: left;
+  /* iOS Safari centers date/time values unless the native look is removed. */
+  -webkit-appearance: none;
+  appearance: none;
+  display: flex;
+  justify-content: flex-start;
+}
+.date-time input::-webkit-date-and-time-value {
+  text-align: left;
+  margin: 0;
+}
+.date-time input::-webkit-datetime-edit {
+  padding: 0;
+}
+.required {
+  color: #b0533f;
+  margin-left: 2px;
+}
+.field-hint {
+  color: #8d9197;
+}
+.visibility-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.visibility-options label {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 6px;
+  border: 1px solid #dfe1e4;
+  border-radius: 12px;
+  background: #fff;
+  color: #44484e;
+  text-align: center;
+  cursor: pointer;
+}
+/* Radios match :read-only, so out-rank the .field input:read-only rule. */
+.field .visibility-options input[type="radio"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.visibility-options strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+.visibility-options small {
+  font-size: 10px;
+  color: #74767c;
+  line-height: 1.3;
+}
+.visibility-options label.selected {
+  border-color: var(--dark);
+  background: linear-gradient(180deg, #f4f5f6, #e6e8ea);
+  box-shadow: inset 0 0 0 1px var(--dark);
+}
+.visibility-options label:has(input:focus-visible) {
+  outline: 2px solid var(--dark);
+  outline-offset: 2px;
+}
+.join-code {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.join-code output {
+  flex: 1;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  border: 1px solid #dfe1e4;
+  border-radius: 8px;
+  background: #eef0f1;
+  color: var(--ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  user-select: all;
+}
+.join-code .icon-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+}
+.game-notes {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #55595f;
+  white-space: pre-wrap;
+}
+@media (max-width: 640px) {
+  .date-time input {
+    font-size: 16px;
+    min-height: 45px;
+  }
+  .visibility-options small {
+    font-size: 9px;
+  }
+}
+
+/* Scores page */
+.main-nav button {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.main-nav button > svg {
+  display: none;
+}
+.scores-page {
+  padding: 57px 0 0;
+  min-height: 650px;
+}
+.scores-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+}
+.scores-head .page-title {
+  margin-top: 0;
+}
+.scores-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+.scores-actions .icon-button {
+  width: 44px;
+  height: 44px;
+}
+.stat-cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 26px;
+}
+.stat-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 20px 8px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  color: #6f7277;
+}
+.stat-card strong {
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: -0.6px;
+}
+.stat-card span {
+  font-size: 12px;
+}
+.segmented {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 4px;
+  margin-top: 24px;
+  padding: 4px;
+  background: #eceeec;
+  border: 1px solid #e3e5e2;
+  border-radius: 12px;
+}
+.segmented button {
+  min-height: 40px;
+  border: 0;
+  border-radius: 9px;
+  background: transparent;
+  color: #5f6267;
+  font-size: 13px;
+  font-weight: 600;
+}
+.segmented button[aria-pressed="true"] {
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 1px 3px #0000001a;
+}
+.scores-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  padding: 70px 20px;
+  text-align: center;
+}
+.scores-empty-icon {
+  display: grid;
+  place-items: center;
+  width: 84px;
+  height: 84px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #eef0f1, #dfe2e5);
+  color: #55595f;
+  margin-bottom: 10px;
+}
+.scores-empty h3 {
+  font-size: 22px;
+  letter-spacing: -0.5px;
+}
+.scores-empty p {
+  font-size: 14px;
+  color: #6f7277;
+}
+.score-list {
+  list-style: none;
+  margin: 20px 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.score-list li {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+}
+.score-list li > div {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+.score-list li > div span {
+  font-size: 12px;
+  color: #74767c;
+}
+.score-points {
+  font-size: 20px;
+  font-weight: 600;
+}
+.score-points small {
+  font-size: 11px;
+  color: #74767c;
+  font-weight: 400;
+}
+.check-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  color: #44484e;
+}
+.check-row input {
+  width: 20px;
+  height: 20px;
+  accent-color: var(--dark);
+}
+@media (max-width: 760px) {
+  .main-nav button {
+    flex-direction: column;
+    justify-content: center;
+    gap: 3px;
+    min-width: 0 !important;
+    width: 78px;
+    min-height: 52px !important;
+    padding: 0 4px !important;
+    font-size: 10.5px !important;
+  }
+  .main-nav button > svg {
+    display: block;
+  }
+  .scores-page {
+    padding-top: 32px;
+  }
+  .scores-head .page-title {
+    font-size: 34px;
+  }
+  .stat-cards {
+    gap: 8px;
+  }
+  .stat-card strong {
+    font-size: 22px;
+  }
+}

@@ -10,8 +10,10 @@ export function demoId() {
 }
 export type Response =
   "pending" | "available" | "maybe" | "unavailable" | "accepted";
+export type MahjongType = "American" | "Chinese";
+export type Visibility = "Public" | "Friends Only" | "Private";
 export type Rules = {
-  variant: "American";
+  variant: MahjongType;
   year: number;
   profile: "Crew standard" | "House rules";
   notes: string;
@@ -33,6 +35,11 @@ export type Game = {
   slots: string[];
   tables: Table[];
   duties: { task: string; person: string }[];
+  /** null means unlimited attendees. */
+  maxAttendees: number | null;
+  visibility: Visibility;
+  joinCode?: string;
+  notes?: string;
 };
 export const standardRules: Rules = {
   variant: "American",
@@ -88,6 +95,8 @@ export function initialGames(): Game[] {
         { task: "Tiles & racks", person: "Robin C." },
         { task: "Refreshments", person: "Open" },
       ],
+      maxAttendees: 4,
+      visibility: "Friends Only",
     },
     {
       id: "evening",
@@ -117,6 +126,8 @@ export function initialGames(): Game[] {
         { task: "Tiles & racks", person: "Morgan B." },
         { task: "Refreshments", person: "Taylor S." },
       ],
+      maxAttendees: 8,
+      visibility: "Friends Only",
     },
     {
       id: "sunday",
@@ -139,12 +150,31 @@ export function initialGames(): Game[] {
         { task: "Tiles & racks", person: "Open" },
         { task: "Refreshments", person: "Open" },
       ],
+      maxAttendees: null,
+      visibility: "Friends Only",
     },
   ];
 }
 
 export function seats(game: Game) {
   return game.tables.reduce((n, table) => n + table.players.length, 0);
+}
+/** Remaining seats, or null when the organizer left attendance unlimited. */
+export function openSpots(game: Game) {
+  return game.maxAttendees === null
+    ? null
+    : Math.max(0, game.maxAttendees - seats(game));
+}
+export function tablesFor(maxAttendees: number | null) {
+  return Math.max(1, Math.ceil((maxAttendees ?? 4) / 4));
+}
+const CODE_CHARS = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+export function joinCode() {
+  // Demo-only share code; a real app must issue and check codes server-side.
+  return Array.from(
+    crypto.getRandomValues(new Uint32Array(6)),
+    (value) => CODE_CHARS[value % CODE_CHARS.length],
+  ).join("");
 }
 export function fullTables(game: Game) {
   return game.tables.filter((table) => table.players.length === 4).length;
@@ -194,18 +224,35 @@ export function acceptInvite(games: Game[], id: string): Game[] {
     )
   )
     throw new Error("You already have a confirmed game at this time.");
-  const tableId = game.tables.find((table) => table.players.length < 4)?.id;
-  if (!tableId)
+  if (openSpots(game) === 0)
     throw new Error(
       "Every seat is filled. Ask the organizer about the waitlist.",
     );
+  // Unlimited or not-yet-full games open another four-seat table when needed.
+  const tables = game.tables.some((table) => table.players.length < 4)
+    ? game.tables
+    : [
+        ...game.tables,
+        {
+          id: String(game.tables.length + 1),
+          players: [],
+          sessions: [
+            {
+              id: "1",
+              rules: { ...game.tables[0].sessions.at(-1)!.rules },
+              hands: [],
+            },
+          ],
+        },
+      ];
+  const tableId = tables.find((table) => table.players.length < 4)!.id;
   return games.map((item) =>
     item.id !== id
       ? item
       : {
           ...item,
           response: "accepted",
-          tables: item.tables.map((table) =>
+          tables: tables.map((table) =>
             table.id !== tableId
               ? table
               : { ...table, players: [...table.players, DEMO_PLAYER] },
@@ -286,5 +333,40 @@ export function newSession(table: Table, id: string): Table {
       ...table.sessions,
       { id, rules: { ...previous.rules }, hands: [] },
     ],
+  };
+}
+
+/** A player's own result for one game, shown on the Scores page. */
+export type ScoreEntry = {
+  id: string;
+  title: string;
+  date: string;
+  type: MahjongType;
+  won: boolean;
+  points: number;
+};
+export function addScore(entries: ScoreEntry[], entry: ScoreEntry) {
+  if (entries.some((item) => item.id === entry.id)) return entries;
+  if (!entry.title.trim()) throw new Error("Add the game name.");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.date))
+    throw new Error("Choose a date.");
+  if (
+    !Number.isInteger(entry.points) ||
+    entry.points < 0 ||
+    entry.points > 10000
+  )
+    throw new Error("Enter whole points from 0 to 10,000.");
+  return [...entries, { ...entry, title: entry.title.trim() }].sort((a, b) =>
+    b.date.localeCompare(a.date),
+  );
+}
+export function scoreStats(entries: ScoreEntry[], type: MahjongType | "All") {
+  const list = entries.filter((entry) => type === "All" || entry.type === type);
+  const total = list.reduce((sum, entry) => sum + entry.points, 0);
+  return {
+    list,
+    games: list.length,
+    wins: list.filter((entry) => entry.won).length,
+    avg: list.length ? Math.round(total / list.length) : 0,
   };
 }
