@@ -75,7 +75,7 @@ npm audit --audit-level=low
 Initial verification completed on 2026-10-16:
 
 - ESLint and TypeScript pass.
-- All **20 unit tests** pass, including ID generation without HTTPS-only `randomUUID`, plus: fresh fixtures, response/seat separation, unavailable without a reason, slot validation, explicit/idempotent acceptance, full capacity, overlapping invitations, cancellation, incomplete tables, manual point validation, duplicate hand IDs, draws, per-table rules, preserved prior sessions, and time-zone-independent labels.
+- All **19 unit tests** pass, including ID generation without HTTPS-only `randomUUID`, plus: fresh fixtures, response/seat separation, unavailable without a reason, slot validation, explicit/idempotent acceptance, full capacity, overlapping invitations, cancellation, incomplete tables, manual point validation, duplicate hand IDs, draws, per-table rules, preserved prior sessions, and time-zone-independent labels.
 - Optimized production build passes with two build workers.
 - The included GitHub checks workflow runs lint, type generation/typecheck, unit tests, build, and audit; it has not been executed remotely as part of this task.
 - npm audit reports **zero vulnerabilities**, including development dependencies. ESLint 10 + TypeScript/React Hooks linting are used instead of the Next ESLint preset because its current transitive glob dependency has an unpatched advisory. No runtime UI library was added.
