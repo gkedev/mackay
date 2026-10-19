@@ -2036,7 +2036,7 @@ legend {
   }
 }
 
-/* Create game (Axel's field set, silver theme) */
+/* Create game (Axel's field set, Rackettes theme) */
 .create-form legend {
   padding: 0;
   margin-bottom: 8px;
@@ -2046,10 +2046,10 @@ legend {
   min-width: 0;
   min-height: 44px;
   padding: 10px 12px;
-  border: 1px solid #dfe1e4;
+  border: 1px solid #e1e1e1;
   border-radius: 8px;
   background: #fff;
-  color: #44484e;
+  color: #474747;
   font-size: 12px;
   text-align: left;
   /* iOS Safari centers date/time values unless the native look is removed. */
@@ -2066,11 +2066,11 @@ legend {
   padding: 0;
 }
 .required {
-  color: #b0533f;
+  color: var(--pink-deep);
   margin-left: 2px;
 }
 .field-hint {
-  color: #8d9197;
+  color: #909090;
 }
 .visibility-options {
   display: grid;
@@ -2084,10 +2084,10 @@ legend {
   align-items: center;
   gap: 4px;
   padding: 14px 6px;
-  border: 1px solid #dfe1e4;
+  border: 1px solid #e1e1e1;
   border-radius: 12px;
   background: #fff;
-  color: #44484e;
+  color: #474747;
   text-align: center;
   cursor: pointer;
 }
@@ -2105,16 +2105,17 @@ legend {
 }
 .visibility-options small {
   font-size: 10px;
-  color: #74767c;
+  color: #767676;
   line-height: 1.3;
 }
 .visibility-options label.selected {
   border-color: var(--dark);
-  background: linear-gradient(180deg, #f4f5f6, #e6e8ea);
-  box-shadow: inset 0 0 0 1px var(--dark);
+  background: var(--pink-soft);
+  color: var(--dark);
+  box-shadow: 3px 3px 0 var(--dark);
 }
 .visibility-options label:has(input:focus-visible) {
-  outline: 2px solid var(--dark);
+  outline: 2px solid var(--pink-deep);
   outline-offset: 2px;
 }
 .join-code {
@@ -2128,9 +2129,9 @@ legend {
   display: flex;
   align-items: center;
   padding: 0 14px;
-  border: 1px solid #dfe1e4;
+  border: 1px solid #e1e1e1;
   border-radius: 8px;
-  background: #eef0f1;
+  background: #f0f0f0;
   color: var(--ink);
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
   font-size: 16px;
@@ -2146,7 +2147,7 @@ legend {
 .game-notes {
   font-size: 13px;
   line-height: 1.6;
-  color: #55595f;
+  color: #585858;
   white-space: pre-wrap;
 }
 @media (max-width: 640px) {
@@ -2205,12 +2206,13 @@ legend {
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--radius);
-  color: #6f7277;
+  color: #727272;
 }
 .stat-card strong {
   font-size: 26px;
-  font-weight: 600;
-  color: var(--ink);
+  font-weight: 700;
+  color: var(--pink);
+  text-shadow: 1.5px 1.5px 0 var(--dark);
   letter-spacing: -0.6px;
 }
 .stat-card span {
@@ -2222,8 +2224,8 @@ legend {
   gap: 4px;
   margin-top: 24px;
   padding: 4px;
-  background: #eceeec;
-  border: 1px solid #e3e5e2;
+  background: #ededed;
+  border: 1px solid #e4e4e4;
   border-radius: 12px;
 }
 .segmented button {
@@ -2231,14 +2233,14 @@ legend {
   border: 0;
   border-radius: 9px;
   background: transparent;
-  color: #5f6267;
+  color: #626262;
   font-size: 13px;
   font-weight: 600;
 }
 .segmented button[aria-pressed="true"] {
-  background: #fff;
-  color: var(--ink);
-  box-shadow: 0 1px 3px #0000001a;
+  background: var(--dark);
+  color: var(--pink);
+  box-shadow: 0 2px 4px #0002;
 }
 .scores-empty {
   display: flex;
@@ -2254,8 +2256,8 @@ legend {
   width: 84px;
   height: 84px;
   border-radius: 20px;
-  background: linear-gradient(180deg, #eef0f1, #dfe2e5);
-  color: #55595f;
+  background: var(--dark);
+  color: var(--pink);
   margin-bottom: 10px;
 }
 .scores-empty h3 {
@@ -2264,7 +2266,7 @@ legend {
 }
 .scores-empty p {
   font-size: 14px;
-  color: #6f7277;
+  color: #727272;
 }
 .score-list {
   list-style: none;
@@ -2292,15 +2294,23 @@ legend {
 }
 .score-list li > div span {
   font-size: 12px;
-  color: #74767c;
+  color: #767676;
+}
+.score-list .pill {
+  background: var(--pink);
+  border: 1.5px solid var(--dark);
+  color: var(--dark);
+  font-weight: 700;
+  box-shadow: 2px 2px 0 var(--dark);
 }
 .score-points {
   font-size: 20px;
-  font-weight: 600;
+  font-weight: 700;
+  color: var(--pink-deep);
 }
 .score-points small {
   font-size: 11px;
-  color: #74767c;
+  color: #767676;
   font-weight: 400;
 }
 .check-row {
@@ -2308,12 +2318,12 @@ legend {
   align-items: center;
   gap: 10px;
   font-size: 13px;
-  color: #44484e;
+  color: #474747;
 }
 .check-row input {
   width: 20px;
   height: 20px;
-  accent-color: var(--dark);
+  accent-color: var(--pink-deep);
 }
 @media (max-width: 760px) {
   .main-nav button {
