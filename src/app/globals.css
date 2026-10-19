@@ -2009,3 +2009,126 @@ legend {
     transform: none;
   }
 }
+
+/* Create game (Axel's field set, silver theme) */
+.create-form legend {
+  padding: 0;
+  margin-bottom: 8px;
+}
+.date-time input {
+  width: 100%;
+  min-width: 0;
+  min-height: 44px;
+  padding: 10px 12px;
+  border: 1px solid #dfe1e4;
+  border-radius: 8px;
+  background: #fff;
+  color: #44484e;
+  font-size: 12px;
+  text-align: left;
+  /* iOS Safari centers date/time values unless the native look is removed. */
+  -webkit-appearance: none;
+  appearance: none;
+  display: flex;
+  justify-content: flex-start;
+}
+.date-time input::-webkit-date-and-time-value {
+  text-align: left;
+  margin: 0;
+}
+.date-time input::-webkit-datetime-edit {
+  padding: 0;
+}
+.required {
+  color: #b0533f;
+  margin-left: 2px;
+}
+.field-hint {
+  color: #8d9197;
+}
+.visibility-options {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.visibility-options label {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 14px 6px;
+  border: 1px solid #dfe1e4;
+  border-radius: 12px;
+  background: #fff;
+  color: #44484e;
+  text-align: center;
+  cursor: pointer;
+}
+/* Radios match :read-only, so out-rank the .field input:read-only rule. */
+.field .visibility-options input[type="radio"] {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+}
+.visibility-options strong {
+  font-size: 13px;
+  font-weight: 600;
+}
+.visibility-options small {
+  font-size: 10px;
+  color: #74767c;
+  line-height: 1.3;
+}
+.visibility-options label.selected {
+  border-color: var(--dark);
+  background: linear-gradient(180deg, #f4f5f6, #e6e8ea);
+  box-shadow: inset 0 0 0 1px var(--dark);
+}
+.visibility-options label:has(input:focus-visible) {
+  outline: 2px solid var(--dark);
+  outline-offset: 2px;
+}
+.join-code {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+.join-code output {
+  flex: 1;
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  padding: 0 14px;
+  border: 1px solid #dfe1e4;
+  border-radius: 8px;
+  background: #eef0f1;
+  color: var(--ink);
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  user-select: all;
+}
+.join-code .icon-button {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+}
+.game-notes {
+  font-size: 13px;
+  line-height: 1.6;
+  color: #55595f;
+  white-space: pre-wrap;
+}
+@media (max-width: 640px) {
+  .date-time input {
+    font-size: 16px;
+    min-height: 45px;
+  }
+  .visibility-options small {
+    font-size: 9px;
+  }
+}

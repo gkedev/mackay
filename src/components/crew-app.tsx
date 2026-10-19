@@ -18,13 +18,18 @@ import {
   DEMO_PLAYER,
   fullTables,
   initialGames,
+  joinCode,
   newSession,
+  openSpots,
   recordHand,
   respondToPoll,
   seats,
   standardRules,
+  tablesFor,
   TIME_ZONE,
   type Game,
+  type MahjongType,
+  type Visibility,
   type Session,
   type Table,
 } from "@/lib/demo";
@@ -41,7 +46,10 @@ type IconName =
   | "check"
   | "sparkle"
   | "copy"
-  | "grid";
+  | "grid"
+  | "globe"
+  | "lock"
+  | "refresh";
 function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
   const paths: Record<IconName, ReactNode> = {
     plus: <path d="M12 5v14M5 12h14" />,
@@ -84,6 +92,24 @@ function Icon({ name, size = 18 }: { name: IconName; size?: number }) {
       <>
         <rect x="8" y="8" width="13" height="13" rx="2" />
         <path d="M16 8V3H3v13h5" />
+      </>
+    ),
+    globe: (
+      <>
+        <circle cx="12" cy="12" r="9" />
+        <path d="M3 12h18M12 3c2.5 2.7 3.8 5.7 3.8 9s-1.3 6.3-3.8 9c-2.5-2.7-3.8-5.7-3.8-9S9.5 5.7 12 3Z" />
+      </>
+    ),
+    lock: (
+      <>
+        <rect x="5" y="11" width="14" height="10" rx="2" />
+        <path d="M8 11V8a4 4 0 0 1 8 0v3" />
+      </>
+    ),
+    refresh: (
+      <>
+        <path d="M20 11a8 8 0 0 0-14.3-4.3L4 8.5M4 4v4.5h4.5" />
+        <path d="M4 13a8 8 0 0 0 14.3 4.3l1.7-1.8m0 4.5v-4.5h-4.5" />
       </>
     ),
     grid: (
@@ -377,7 +403,9 @@ function GameCard({ game, onOpen }: { game: Game; onOpen: () => void }) {
         ? game.response === "pending"
           ? "Finding a time"
           : "Response sent"
-        : `${game.tables.length * 4 - seats(game)} seats open`;
+        : openSpots(game) === null
+          ? "Open to all"
+          : `${openSpots(game)} spots open`;
   return (
     <button
       type="button"
@@ -954,6 +982,20 @@ function GameDetails({
           <Icon name="pin" size={16} />
           {game.venue} · fictional venue
         </span>
+        <span>
+          <Icon
+            name={
+              game.visibility === "Public"
+                ? "globe"
+                : game.visibility === "Private"
+                  ? "lock"
+                  : "people"
+            }
+            size={16}
+          />
+          {game.visibility}
+          {game.joinCode && ` · code ${game.joinCode}`}
+        </span>
       </div>
       <div className="detail-tabs">
         {(["The plan", "Tables & scores"] as const).map((item) => (
@@ -972,7 +1014,10 @@ function GameDetails({
         <>
           <div className="detail-heading">
             <div>
-              <p className="eyebrow">AMERICAN MAHJONG</p>
+              <p className="eyebrow">
+                {game.tables[0].sessions.at(-1)?.rules.variant.toUpperCase()}{" "}
+                MAHJONG
+              </p>
               <h3>
                 {game.kind === "poll"
                   ? "Let’s find a time."
@@ -1066,8 +1111,10 @@ function GameDetails({
                     ))}
                 </div>
                 <span>
-                  {seats(game)} of {game.tables.length * 4} seats accepted ·{" "}
-                  {fullTables(game)} complete{" "}
+                  {game.maxAttendees === null
+                    ? `${seats(game)} attending · no limit`
+                    : `${seats(game)} of ${game.maxAttendees} attending`}{" "}
+                  · {fullTables(game)} complete{" "}
                   {fullTables(game) === 1 ? "table" : "tables"}
                 </span>
               </div>
@@ -1129,11 +1176,19 @@ function GameDetails({
                 </button>
               )}
               <p className="fine-print">
-                Four accepted players make a table. Sample rules: American ·{" "}
-                {game.tables[0].sessions.at(-1)?.rules.year} · Manual hand
-                values.
+                Four accepted players make a table. Sample rules:{" "}
+                {game.tables[0].sessions.at(-1)?.rules.variant}
+                {game.tables[0].sessions.at(-1)?.rules.variant === "American" &&
+                  ` · ${game.tables[0].sessions.at(-1)?.rules.year}`}{" "}
+                · Manual hand values.
               </p>
             </div>
+          )}
+          {game.notes && (
+            <>
+              <h3 className="subheading">Notes</h3>
+              <p className="game-notes">{game.notes}</p>
+            </>
           )}
           <h3 className="subheading">The little details</h3>
           <div className="duties">
@@ -1363,27 +1418,29 @@ function SessionEditor({
       <div className="rules-grid">
         <label className="field">
           Mahjong type
-          <input value="American" readOnly />
+          <input value={active.rules.variant} readOnly />
         </label>
-        <label className="field">
-          NMJL card year
-          <select
-            aria-label="NMJL card year"
-            value={active.rules.year}
-            disabled={active.hands.length > 0 || !isLatest}
-            onChange={(event) =>
-              attempt(() =>
-                update(
-                  changeRules(active, { year: Number(event.target.value) }),
-                ),
-              )
-            }
-          >
-            {[2025, 2026, 2027].map((year) => (
-              <option key={year}>{year}</option>
-            ))}
-          </select>
-        </label>
+        {active.rules.variant === "American" && (
+          <label className="field">
+            NMJL card year
+            <select
+              aria-label="NMJL card year"
+              value={active.rules.year}
+              disabled={active.hands.length > 0 || !isLatest}
+              onChange={(event) =>
+                attempt(() =>
+                  update(
+                    changeRules(active, { year: Number(event.target.value) }),
+                  ),
+                )
+              }
+            >
+              {[2025, 2026, 2027].map((year) => (
+                <option key={year}>{year}</option>
+              ))}
+            </select>
+          </label>
+        )}
         <label className="field">
           Rules profile
           <select
@@ -1495,6 +1552,15 @@ function SessionEditor({
   );
 }
 
+const VISIBILITY: { value: Visibility; icon: IconName; hint: string }[] = [
+  { value: "Public", icon: "globe", hint: "Visible to all users" },
+  {
+    value: "Friends Only",
+    icon: "people",
+    hint: "Only your confirmed friends",
+  },
+  { value: "Private", icon: "lock", hint: "Requires a join code" },
+];
 function CreateGame({
   onClose,
   onCreate,
@@ -1503,46 +1569,59 @@ function CreateGame({
   onCreate: (game: Game) => void;
 }) {
   const [error, setError] = useState("");
+  const [visibility, setVisibility] = useState<Visibility>("Private");
+  const [code, setCode] = useState(() => joinCode());
+  const [copied, setCopied] = useState("");
+  async function copyCode() {
+    try {
+      await navigator.clipboard.writeText(code);
+      setCopied("Code copied.");
+    } catch {
+      setCopied("Copy isn’t available here. Select the code to copy it.");
+    }
+  }
   function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const title = String(data.get("title")).trim();
     const venue = String(data.get("venue")).trim();
+    const max = String(data.get("max")).trim();
+    const maxAttendees = max ? Number(max) : null;
     if (!title || !venue) {
-      setError("Add a game name and a fictional venue.");
+      setError("Add a game title and a fictional location.");
       return;
     }
-    const startsAt = `${data.get("date")}T${data.get("time")}`;
-    const year = Number(data.get("year"));
+    if (
+      maxAttendees !== null &&
+      (!Number.isInteger(maxAttendees) || maxAttendees < 1)
+    ) {
+      setError("Max attendees must be a whole number, or blank for unlimited.");
+      return;
+    }
+    const variant = data.get("type") as MahjongType;
+    const notes = String(data.get("notes")).trim();
     const game: Game = {
       id: demoId(),
       title,
       venue,
-      startsAt,
+      startsAt: `${data.get("date")}T${data.get("time")}`,
       duration: 180,
       kind: "invitation",
       art: "silver",
       response: "pending",
       selectedSlots: [],
       slots: [],
-      tables: Array.from(
-        { length: Number(data.get("tables")) },
-        (_, index) => ({
-          id: String(index + 1),
-          players: [],
-          sessions: [
-            {
-              id: "1",
-              rules: {
-                ...standardRules,
-                year,
-                profile: data.get("profile") as "Crew standard" | "House rules",
-              },
-              hands: [],
-            },
-          ],
-        }),
-      ),
+      maxAttendees,
+      visibility,
+      joinCode: visibility === "Private" ? code : undefined,
+      notes: notes || undefined,
+      tables: Array.from({ length: tablesFor(maxAttendees) }, (_, index) => ({
+        id: String(index + 1),
+        players: [],
+        sessions: [
+          { id: "1", rules: { ...standardRules, variant }, hands: [] },
+        ],
+      })),
       duties: [
         { task: "Host", person: DEMO_PLAYER },
         { task: "Tiles & racks", person: "Open" },
@@ -1551,88 +1630,149 @@ function CreateGame({
     };
     onCreate(game);
   }
+  const required = (
+    <span className="required" aria-hidden="true">
+      *
+    </span>
+  );
   return (
-    <Dialog title="Make room for a good game." onClose={onClose}>
-      <p className="modal-intro">
-        A few details. Your favorite people. A new reason to get together.
-      </p>
+    <Dialog title="New Game" onClose={onClose}>
+      <p className="modal-intro">Schedule a mahjong game.</p>
       <form className="create-form" onSubmit={submit}>
         <label className="field">
-          Give your game a name
+          <span>Game Title {required}</span>
           <input
             name="title"
-            placeholder="e.g. A very good Thursday"
+            placeholder="e.g. Friday Night Mahjong"
             required
             maxLength={70}
           />
         </label>
-        <div className="form-two">
-          <label className="field">
-            Date
-            <input name="date" type="date" defaultValue="2026-10-29" required />
-          </label>
-          <label className="field">
-            Start time · Pacific
+        <fieldset className="field date-time">
+          <legend>Date &amp; Time {required}</legend>
+          <div className="form-two">
             <input
+              aria-label="Date"
+              name="date"
+              type="date"
+              defaultValue="2026-10-29"
+              required
+            />
+            <input
+              aria-label="Start time, Pacific"
               name="time"
               type="time"
               defaultValue="13:00"
               max="20:59"
               required
             />
-          </label>
-        </div>
+          </div>
+        </fieldset>
         <label className="field">
-          Fictional venue
+          <span>Location {required}</span>
           <input
             name="venue"
-            placeholder="e.g. The Garden Room"
+            placeholder="e.g. Community Center"
             required
             maxLength={80}
           />
         </label>
-        <div className="form-two">
-          <label className="field">
-            Tables
-            <select name="tables">
-              <option value="1">1 table · 4 seats</option>
-              <option value="2">2 tables · 8 seats</option>
-              <option value="3">3 tables · 12 seats</option>
-            </select>
-          </label>
-          <label className="field">
-            NMJL card year
-            <select name="year" defaultValue="2026">
-              <option>2025</option>
-              <option>2026</option>
-              <option>2027</option>
-            </select>
-          </label>
-        </div>
         <label className="field">
-          American rules profile
-          <select name="profile">
-            <option>Crew standard</option>
-            <option>House rules</option>
+          Mahjong Type
+          <select name="type" defaultValue="American">
+            <option value="American">American Mahjong</option>
+            <option value="Chinese">Chinese Mahjong</option>
           </select>
         </label>
-        <p className="fine-print">
-          3-hour sample session · {TIME_ZONE}
-          <br />
-          Each table can start separate sessions with its own rules.
-        </p>
+        <label className="field">
+          <span>
+            Max Attendees{" "}
+            <span className="field-hint">(leave blank for unlimited)</span>
+          </span>
+          <input
+            name="max"
+            type="number"
+            inputMode="numeric"
+            min={1}
+            max={200}
+            step={1}
+            placeholder="e.g. 8"
+          />
+        </label>
+        <fieldset className="field">
+          <legend>Visibility {required}</legend>
+          <div className="visibility-options">
+            {VISIBILITY.map((option) => (
+              <label
+                key={option.value}
+                className={visibility === option.value ? "selected" : ""}
+              >
+                <input
+                  type="radio"
+                  name="visibility"
+                  value={option.value}
+                  checked={visibility === option.value}
+                  onChange={() => setVisibility(option.value)}
+                />
+                <Icon name={option.icon} size={20} />
+                <strong>{option.value}</strong>
+                <small>{option.hint}</small>
+              </label>
+            ))}
+          </div>
+        </fieldset>
+        {visibility === "Private" && (
+          <div className="field">
+            <span id="join-code-label">Join Code</span>
+            <div className="join-code">
+              <output aria-labelledby="join-code-label">{code}</output>
+              <button
+                type="button"
+                className="icon-button"
+                aria-label="New join code"
+                onClick={() => {
+                  setCode(joinCode());
+                  setCopied("");
+                }}
+              >
+                <Icon name="refresh" size={18} />
+              </button>
+              <button
+                type="button"
+                className="icon-button"
+                aria-label="Copy join code"
+                onClick={copyCode}
+              >
+                <Icon name="copy" size={18} />
+              </button>
+            </div>
+            <span role="status">
+              {copied || "Share this code with players you want to invite."}
+            </span>
+          </div>
+        )}
+        <label className="field">
+          Notes
+          <textarea
+            name="notes"
+            rows={3}
+            maxLength={500}
+            placeholder="Any additional info…"
+          />
+        </label>
         {error && (
           <p className="form-error" role="alert">
             {error}
           </p>
         )}
         <button type="submit" className="button button-dark full-width">
-          Create demo game
+          Schedule Game
           <Icon name="arrow" size={16} />
         </button>
         <p className="demo-note">
-          In-memory preview only. No real event, booking, or invitation will be
-          created. Please use fictional details.
+          In-memory preview only. No real event, booking, invitation, or join
+          code is created. {TIME_ZONE} times. Card year and house rules can be
+          set per table under Tables &amp; scores.
         </p>
       </form>
     </Dialog>

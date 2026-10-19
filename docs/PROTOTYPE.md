@@ -43,7 +43,7 @@ The app binds to IPv4 loopback, not a public interface. In Cloudroom, use `room-
 - View separate four-seat tables and their accepted participants.
 - Select an American card year, rules profile, and notes per table session. Record a manual hand value or draw at the complete sample table. No payouts or automatic scoring are calculated.
 - Start a new session with different rules. Previous sessions keep their rules and results; their controls become read-only. Rules also lock when the first hand is recorded.
-- Create a new fictional game with one to three tables, a date, Pacific start time, fictional venue, and initial American rules.
+- Create a new fictional game using Axel's New Game fields: Game Title, Date & Time (separate left-aligned pickers, Pacific), Location, Mahjong Type (American or Chinese), Max Attendees (blank = unlimited; tables are derived as four seats each), Visibility (Public, Friends Only, Private), a demo Join Code for Private games (regenerate/copy), and Notes. Card year and house rules are set per table under Tables & scores.
 - Browse eight fictional crew members; preview a clearly labelled demo profile and invitation explanation.
 - Reset all changes from the footer or profile dialog.
 
