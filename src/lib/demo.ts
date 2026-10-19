@@ -335,3 +335,38 @@ export function newSession(table: Table, id: string): Table {
     ],
   };
 }
+
+/** A player's own result for one game, shown on the Scores page. */
+export type ScoreEntry = {
+  id: string;
+  title: string;
+  date: string;
+  type: MahjongType;
+  won: boolean;
+  points: number;
+};
+export function addScore(entries: ScoreEntry[], entry: ScoreEntry) {
+  if (entries.some((item) => item.id === entry.id)) return entries;
+  if (!entry.title.trim()) throw new Error("Add the game name.");
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(entry.date))
+    throw new Error("Choose a date.");
+  if (
+    !Number.isInteger(entry.points) ||
+    entry.points < 0 ||
+    entry.points > 10000
+  )
+    throw new Error("Enter whole points from 0 to 10,000.");
+  return [...entries, { ...entry, title: entry.title.trim() }].sort((a, b) =>
+    b.date.localeCompare(a.date),
+  );
+}
+export function scoreStats(entries: ScoreEntry[], type: MahjongType | "All") {
+  const list = entries.filter((entry) => type === "All" || entry.type === type);
+  const total = list.reduce((sum, entry) => sum + entry.points, 0);
+  return {
+    list,
+    games: list.length,
+    wins: list.filter((entry) => entry.won).length,
+    avg: list.length ? Math.round(total / list.length) : 0,
+  };
+}

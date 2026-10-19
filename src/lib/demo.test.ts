@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import test from "node:test";
 import {
   acceptInvite,
+  addScore,
   cancelSeat,
   changeRules,
   dateParts,
@@ -14,6 +15,7 @@ import {
   openSpots,
   recordHand,
   respondToPoll,
+  scoreStats,
   seats,
   tablesFor,
 } from "./demo.ts";
@@ -217,4 +219,41 @@ test("max attendees caps seats; blank means unlimited and opens new tables", () 
 });
 test("join codes are six unambiguous characters", () => {
   assert.match(joinCode(), /^[A-HJ-NP-Z2-9]{6}$/);
+});
+test("scores: stats per mahjong type, validation, de-duplication", () => {
+  const a = {
+    id: "a",
+    title: "Fri",
+    date: "2026-10-20",
+    type: "American" as const,
+    won: true,
+    points: 50,
+  };
+  const b = {
+    id: "b",
+    title: "Sat",
+    date: "2026-10-21",
+    type: "Chinese" as const,
+    won: false,
+    points: 25,
+  };
+  assert.deepEqual(scoreStats([], "All"), {
+    list: [],
+    games: 0,
+    wins: 0,
+    avg: 0,
+  });
+  const entries = addScore(addScore([], a), b);
+  assert.equal(entries[0].id, "b");
+  assert.equal(addScore(entries, a), entries);
+  assert.deepEqual(
+    { ...scoreStats(entries, "All"), list: 0 },
+    { list: 0, games: 2, wins: 1, avg: 38 },
+  );
+  assert.equal(scoreStats(entries, "Chinese").wins, 0);
+  assert.throws(
+    () => addScore([], { ...a, id: "c", points: -1 }),
+    /whole points/,
+  );
+  assert.throws(() => addScore([], { ...a, id: "c", title: " " }), /game name/);
 });

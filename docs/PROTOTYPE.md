@@ -43,6 +43,7 @@ The app binds to IPv4 loopback, not a public interface. In Cloudroom, use `room-
 - View separate four-seat tables and their accepted participants.
 - Select an American card year, rules profile, and notes per table session. Record a manual hand value or draw at the complete sample table. No payouts or automatic scoring are calculated.
 - Start a new session with different rules. Previous sessions keep their rules and results; their controls become read-only. Rules also lock when the first hand is recorded.
+- Scores page (Axel's layout), reachable from the core nav (a fixed bottom tab bar with icons on phones): Games, Wins and Avg Pts cards; All / American / Chinese filter; empty state; "+ Score" records your own result for one game (game, date, type, points, won). The bell is a placeholder. Personal score log only; it is separate from per-table hand scoring.
 - Create a new fictional game using Axel's New Game fields: Game Title, Date & Time (separate left-aligned pickers, Pacific), Location, Mahjong Type (American or Chinese), Max Attendees (blank = unlimited; tables are derived as four seats each), Visibility (Public, Friends Only, Private), a demo Join Code for Private games (regenerate/copy), and Notes. Card year and house rules are set per table under Tables & scores.
 - Browse eight fictional crew members; preview a clearly labelled demo profile and invitation explanation.
 - Reset all changes from the footer or profile dialog.
@@ -74,7 +75,7 @@ npm audit --audit-level=low
 Initial verification completed on 2026-10-16:
 
 - ESLint and TypeScript pass.
-- All **16 unit tests** pass, including ID generation without HTTPS-only `randomUUID`, plus: fresh fixtures, response/seat separation, unavailable without a reason, slot validation, explicit/idempotent acceptance, full capacity, overlapping invitations, cancellation, incomplete tables, manual point validation, duplicate hand IDs, draws, per-table rules, preserved prior sessions, and time-zone-independent labels.
+- All **20 unit tests** pass, including ID generation without HTTPS-only `randomUUID`, plus: fresh fixtures, response/seat separation, unavailable without a reason, slot validation, explicit/idempotent acceptance, full capacity, overlapping invitations, cancellation, incomplete tables, manual point validation, duplicate hand IDs, draws, per-table rules, preserved prior sessions, and time-zone-independent labels.
 - Optimized production build passes with two build workers.
 - The included GitHub checks workflow runs lint, type generation/typecheck, unit tests, build, and audit; it has not been executed remotely as part of this task.
 - npm audit reports **zero vulnerabilities**, including development dependencies. ESLint 10 + TypeScript/React Hooks linting are used instead of the Next ESLint preset because its current transitive glob dependency has an unpatched advisory. No runtime UI library was added.
