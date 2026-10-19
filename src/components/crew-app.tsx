@@ -893,12 +893,12 @@ export function CrewApp() {
             <div className="section-heading">
               <div>
                 {view === "My games" && (
-                  <p className="eyebrow">
-                    A LITTLE SOMETHING TO LOOK FORWARD TO
+                  <p className="eyebrow welcome-line">
+                    Welcome back, {DEMO_PLAYER.split(" ")[0]}
                   </p>
                 )}
                 <h2 className={view === "My games" ? "page-title" : ""}>
-                  {view === "My games" ? "Your games." : "On the calendar"}
+                  {view === "My games" ? "Upcoming Games" : "On the calendar"}
                 </h2>
                 <p className="section-description">
                   {view === "My games"
